@@ -61,6 +61,24 @@
                                                 <div>
                                                     <p class="whitespace-pre-wrap text-sm text-gray-900">{{ $tweet->body }}</p>
                                                     <p class="mt-2 text-xs text-gray-500">{{ $tweet->created_at->format('M j, Y g:i A') }}</p>
+                                                    <div class="mt-3 flex items-center gap-3">
+                                                        @if ($tweet->liked_by_user)
+                                                            <form method="POST" action="{{ route('likes.destroy', $tweet) }}">
+                                                                @csrf
+                                                                @method('DELETE')
+
+                                                                <x-secondary-button>{{ __('Unlike') }}</x-secondary-button>
+                                                            </form>
+                                                        @else
+                                                            <form method="POST" action="{{ route('likes.store', $tweet) }}">
+                                                                @csrf
+
+                                                                <x-primary-button>{{ __('Like') }}</x-primary-button>
+                                                            </form>
+                                                        @endif
+
+                                                        <p class="text-sm text-gray-600">{{ trans_choice('{0} 0 likes|{1} 1 like|[2,*] :count likes', $tweet->likes_count, ['count' => $tweet->likes_count]) }}</p>
+                                                    </div>
                                                 </div>
 
                                                 <form method="POST" action="{{ route('tweets.destroy', $tweet) }}">

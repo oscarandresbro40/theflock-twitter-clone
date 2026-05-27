@@ -17,6 +17,10 @@ class TweetController extends Controller
         return view('dashboard', [
             'tweets' => $user
                 ->tweets()
+                ->withCount('likes')
+                ->withExists([
+                    'likes as liked_by_user' => fn ($query) => $query->where('user_id', $user->getKey()),
+                ])
                 ->latest()
                 ->get(),
             'users' => User::query()

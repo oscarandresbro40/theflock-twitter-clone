@@ -7,6 +7,7 @@ use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -37,6 +38,16 @@ class User extends Authenticatable
         return $this->hasMany(Tweet::class);
     }
 
+    public function likes(): HasMany
+    {
+        return $this->hasMany(Like::class);
+    }
+
+    public function likedTweets(): BelongsToMany
+    {
+        return $this->belongsToMany(Tweet::class, 'likes')->withTimestamps();
+    }
+
     public function following(): BelongsToMany
     {
         return $this->belongsToMany(
@@ -60,5 +71,10 @@ class User extends Authenticatable
     public function isFollowing(User $user): bool
     {
         return $this->following()->whereKey($user->getKey())->exists();
+    }
+
+    public function hasLikedTweet(Tweet $tweet): bool
+    {
+        return $this->likedTweets()->whereKey($tweet->getKey())->exists();
     }
 }
