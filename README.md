@@ -30,8 +30,10 @@ The app is designed so evaluators can clone, install, seed, and run it quickly w
 - Composer 2.9+
 - Node 24 LTS (or compatible)
 - PHP SQLite extensions enabled:
-	- pdo_sqlite
-	- sqlite3
+  - pdo_sqlite
+  - sqlite3
+
+Any local PHP environment is fine (for example: terminal PHP, XAMPP, WAMP, Laragon, Laravel Herd, Valet, Linux, macOS, or Windows) as long as the requirements above are installed.
 
 ## Setup Runbook
 
@@ -41,11 +43,15 @@ Run from the repository root.
 
 Windows (CMD/PowerShell):
 
+```bash
 copy .env.example .env
+```
 
 Generic alternative:
 
+```bash
 cp .env.example .env
+```
 
 In .env, ensure:
 
@@ -56,38 +62,48 @@ Create the SQLite file if needed:
 
 Windows:
 
+```bash
 type nul > database\database.sqlite
+```
 
 Generic:
 
+```bash
 touch database/database.sqlite
+```
 
 ### 2) Install dependencies and initialize app
 
+```bash
 composer install
 npm install
 php artisan key:generate
 php artisan migrate:fresh --seed
 npm run build
 php artisan serve
+```
 
 After php artisan serve, open the local URL shown in terminal.
 
 ## Windows / Laragon Notes
 
-- Use Laragon Terminal in project root.
-- Confirm PHP version is 8.3+ and sqlite extensions are enabled in Laragon PHP.
-- Use the same setup commands above.
+- Laragon is optional, not required.
+- If using Laragon on Windows, use the same setup commands above from the project root.
+- Ensure the active Laragon PHP version is 8.3+ with pdo_sqlite and sqlite3 enabled.
 
 ## Daily Development Commands
 
+```bash
 php artisan serve
 npm run dev
+```
 
 ## Test and Build Commands
 
+```bash
 php artisan test
 npm run build
+```
 
 ## Demo Credentials
 
@@ -108,10 +124,10 @@ Seed data includes at least 10 additional users plus crossed tweets, follows, an
 - Followers and following lists
 - User profiles with username, bio, avatar placeholder, follower/following counts, and profile tweets
 - Personalized timeline showing:
-	- authenticated user tweets
-	- followed users' tweets
-	- newest-first ordering
-	- pagination
+  - authenticated user tweets
+  - followed users' tweets
+  - newest-first ordering
+  - pagination
 - Seed data with demo credentials and populated content
 
 ## Technical Decisions
@@ -133,7 +149,7 @@ Seed data includes at least 10 additional users plus crossed tweets, follows, an
 
 - GitHub Copilot Agent was used to accelerate implementation.
 - Human review and validation were performed through:
-	- automated tests (php artisan test)
-	- build checks (npm run build)
-	- git diff inspection
-	- small, focused commits during development
+  - automated tests (php artisan test)
+  - build checks (npm run build)
+  - git diff inspection
+  - small, focused commits during development
