@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\FollowController;
 use App\Http\Controllers\TweetController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -13,6 +14,8 @@ Route::get('/dashboard', [TweetController::class, 'index'])
     ->name('dashboard');
 
 Route::middleware('auth')->group(function () {
+    Route::post('/users/{user}/follow', [FollowController::class, 'store'])->name('follows.store');
+    Route::delete('/users/{user}/follow', [FollowController::class, 'destroy'])->name('follows.destroy');
     Route::post('/tweets', [TweetController::class, 'store'])->name('tweets.store');
     Route::delete('/tweets/{tweet}', [TweetController::class, 'destroy'])->name('tweets.destroy');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

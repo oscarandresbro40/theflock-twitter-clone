@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Tweet;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -11,10 +12,16 @@ class TweetController extends Controller
 {
     public function index(Request $request): View
     {
+        $user = $request->user();
+
         return view('dashboard', [
-            'tweets' => $request->user()
+            'tweets' => $user
                 ->tweets()
                 ->latest()
+                ->get(),
+            'users' => User::query()
+                ->whereKeyNot($user->getKey())
+                ->orderBy('name')
                 ->get(),
         ]);
     }
