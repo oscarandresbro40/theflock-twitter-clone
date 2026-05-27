@@ -1,69 +1,113 @@
-# The Flock Twitter Clone
+# The Flock Twitter Clone Challenge
 
-Laravel-based Twitter/X clone challenge implementation with first-party authentication, tweet interactions, social graph features, public profile/search pages, personalized timeline behavior, and seeded demo data for immediate evaluation.
+Full-stack Twitter/X clone built for The Flock technical challenge.
+
+This implementation covers the core social workflows end to end: authentication, profiles, tweeting, following, likes, replies, personalized timeline behavior, user discovery, image upload on tweets, and seeded demo-ready data so evaluators can run the app immediately.
 
 ## Project Overview
 
-This project focuses on delivering a pragmatic, test-covered Laravel application that mirrors core Twitter/X workflows:
+Core workflows implemented in the app:
 
-- Account registration and authentication
-- Posting and deleting tweets
-- Following and unfollowing users
-- Liking and unliking tweets
-- Discovering users via search
-- Viewing public profiles and follow lists
-- Seeing a personalized timeline of relevant tweets
+- Register, login, logout
+- Create and delete tweets
+- Upload an optional single image per tweet
+- Follow and unfollow users
+- Like and unlike tweets
+- Reply to tweets and browse reply threads
+- Discover users via username prefix search
+- View public profiles and follower/following lists
+- Browse a personalized, paginated timeline
 
-The app is designed so evaluators can clone, install, seed, and run it quickly with minimal local setup.
+## Technical Stack
 
-## Stack and Rationale
+- Laravel 13
+- Blade
+- Tailwind CSS
+- SQLite
+- Laravel Breeze
+- Vite and npm
+- Laravel feature and unit tests
 
-- Laravel 13: fast delivery using framework conventions and strong testing support.
-- Blade: simple server-rendered UI, good fit for challenge scope.
-- Tailwind CSS: utility-first styling for responsive views without heavy frontend overhead.
-- SQLite: easiest local evaluation path, no external database server required.
-- Laravel Breeze: first-party auth scaffolding for register/login/logout without third-party auth providers.
+Why this stack:
+
+- Laravel plus Blade plus Tailwind provides a fast, maintainable full-stack delivery path with clear conventions.
+- SQLite reduces local setup friction for evaluation and reproducibility.
+- Breeze provides first-party authentication scaffolding without third-party auth providers.
+- Vite and npm provide a standard frontend asset pipeline.
+- Laravel tests provide confidence for feature behavior and regressions.
 
 ## Prerequisites
 
 - PHP 8.3+
 - Composer 2.9+
-- Node 20+ or compatible. Developed with Node 24.16.0.
-- PHP SQLite extensions enabled:
+- Node 20+ or compatible
+- npm
+- PHP SQLite extensions:
   - pdo_sqlite
   - sqlite3
 
-Any local PHP environment is fine (for example: terminal PHP, XAMPP, WAMP, Laragon, Laravel Herd, Valet, Linux, macOS, or Windows) as long as the requirements above are installed.
+Developed with Node 24.16.0.
+
+Any local PHP environment is supported as long as prerequisites are installed, including terminal PHP, XAMPP, WAMP, Laragon, Laravel Herd, Valet, Linux, macOS, or Windows.
 
 ## Setup Runbook
 
-Run from the repository root.
+### 1) Clone the repository
 
-### 1) Environment file
+Main option (HTTPS):
 
-Windows (CMD/PowerShell):
+```bash
+git clone https://github.com/oscarandresbro40/theflock-twitter-clone.git
+cd theflock-twitter-clone
+```
+
+Alternative option (SSH):
+
+```bash
+git clone git@github.com:oscarandresbro40/theflock-twitter-clone.git
+cd theflock-twitter-clone
+```
+
+### 2) Install dependencies
+
+```bash
+composer install
+npm install
+```
+
+### 3) Create environment file
+
+Windows (CMD or PowerShell):
 
 ```bash
 copy .env.example .env
 ```
 
-Generic alternative:
+macOS, Linux, or Git Bash:
 
 ```bash
 cp .env.example .env
 ```
 
-In .env, ensure:
+### 4) Generate app key
+
+```bash
+php artisan key:generate
+```
+
+### 5) Configure SQLite
+
+Ensure this exists in .env:
 
 - DB_CONNECTION=sqlite
 
 Laravel uses database/database.sqlite by default for sqlite.
 
-Optional explicit path (if needed):
+Optional explicit path if needed:
 
 - DB_DATABASE=database/database.sqlite
 
-Create the SQLite file if needed:
+Create the database file if needed:
 
 Windows:
 
@@ -71,32 +115,43 @@ Windows:
 type nul > database\database.sqlite
 ```
 
-Generic:
+macOS or Linux:
 
 ```bash
 touch database/database.sqlite
 ```
 
-### 2) Install dependencies and initialize app
+### 6) Run database and seed data
 
 ```bash
-composer install
-npm install
-php artisan key:generate
 php artisan migrate:fresh --seed
+```
+
+### 7) Link storage for uploaded images
+
+```bash
+php artisan storage:link
+```
+
+### 8) Build frontend assets
+
+```bash
 npm run build
+```
+
+### 9) Start the application
+
+```bash
 php artisan serve
 ```
 
-After php artisan serve, open the local URL shown in terminal.
+Open the local URL shown in terminal.
 
-## Windows / Laragon Notes
+Optional Windows note:
 
-- Laragon is optional, not required.
-- If using Laragon on Windows, use the same setup commands above from the project root.
-- Ensure the active Laragon PHP version is 8.3+ with pdo_sqlite and sqlite3 enabled.
+- Laragon can be used, but it is not required.
 
-## Daily Development Commands
+## Development Commands
 
 ```bash
 php artisan serve
@@ -112,49 +167,141 @@ npm run build
 
 ## Demo Credentials
 
-- Email: demo@example.com
-- Password: password
-
-Seed data includes at least 10 additional users plus crossed tweets, follows, and likes so the app is populated immediately after migrate:fresh --seed.
+- email: demo@example.com
+- password: password
 
 ## Completed Features
 
-- Laravel scaffold
-- Breeze authentication: register, login, logout
-- SQLite database setup for local development
-- Tweet creation (max 280 chars) and deletion (owner only)
+### Authentication
+
+- Register, login, logout with Breeze
+- Authenticated route protection for authenticated actions
+
+### Tweets
+
+- Create tweet with max 280-character validation
+- Delete tweet by owner only
+- Optional single image upload per tweet
+- Image validation for type and size
+- Uploaded image cleanup on tweet deletion
+
+### Social Graph
+
 - Follow and unfollow users
+- Followers list page
+- Following list page
+
+### Likes
+
 - Like and unlike tweets
+- Visible like counts
+
+### Replies and Threads
+
+- Reply threads on tweet detail pages
+- Public thread viewing for guests
+- Reply posting for authenticated users
+- Reply counts on tweet cards
+
+### User Discovery
+
 - User search by username prefix
-- Followers and following lists
-- User profiles with username, bio, avatar placeholder, follower/following counts, and profile tweets
-- Personalized timeline showing:
-  - authenticated user tweets
-  - followed users' tweets
-  - newest-first ordering
-  - pagination
-- Seed data with demo credentials and populated content
+
+### Profiles
+
+- Public profile pages
+- Unique username and editable bio
+- Static avatar placeholder
+- Follower and following counts
+- Profile tweet list
+
+### Timeline
+
+- Personalized timeline includes authenticated user tweets and followed users' tweets
+- Newest-first ordering
+- Pagination
+
+### Seed Data
+
+- Demo user credentials
+- At least 10 users seeded
+- Seeded tweets, follows, likes, replies
+
+## Bonus Features Implemented
+
+- Reply threads
+- Seeded replies
+- Reply counts on tweet cards
+- Optional single image upload per tweet
 
 ## Technical Decisions
 
-- Laravel + Blade + Tailwind for fast, maintainable full-stack delivery.
-- SQLite for local ease of setup and evaluation.
-- Breeze used as first-party auth scaffolding (no Firebase/Supabase/third-party auth).
-- Follows and likes modeled with pivot-style tables and unique constraints to enforce idempotent relationships.
-- Timeline query built from authenticated user plus followed users, ordered by created_at descending.
+- Laravel plus Blade plus Tailwind:
+  - Chosen for pragmatic full-stack delivery with strong defaults and maintainable server-rendered UI.
+- SQLite:
+  - Chosen for low-friction local setup and evaluator-friendly onboarding.
+- Authentication with Laravel Breeze:
+  - First-party auth scaffolding only, without third-party auth services.
+- Follows graph modeling:
+  - Modeled with follows table linking follower_id and followed_id, with uniqueness constraints for idempotent behavior.
+- Personalized timeline:
+  - Built from root tweets authored by the authenticated user and users they follow, ordered newest first and paginated.
+- Likes modeling:
+  - Modeled with likes table linking user_id and tweet_id, with uniqueness constraints to prevent duplicate likes.
+- Replies modeling:
+  - Replies use tweets.parent_id referencing tweets.id, enabling root tweets and direct-thread replies.
+- Image uploads:
+  - Optional single image per tweet, stored on public disk, with type and size validation and cleanup during delete.
+- Profiles and search:
+  - Public profile pages expose user metadata and tweet history; search uses username prefix matching.
+- Seed data for evaluation:
+  - Seeding produces realistic social data so reviewers can immediately test key workflows.
 
 ## Trade-offs and Known Limitations
 
-- SQLite is optimized for local/dev simplicity, not production-scale throughput.
-- No notifications, replies, or media upload in current scope.
-- UI is intentionally pragmatic and challenge-focused rather than a fully polished design system.
-- No Docker workflow is included in this repository.
+- SQLite is optimized for local evaluation; production would typically use PostgreSQL or MySQL.
+- No real-time updates.
+- No notifications.
+- No Docker workflow.
+- No multiple image uploads per tweet.
+- No image editing, replacement, or removal flow for existing tweets.
+- UI is pragmatic and challenge-focused rather than a polished design system.
 
 ## AI Usage Notes
 
-- GitHub Copilot Agent was used to accelerate implementation.
-- Human review and validation were performed through:
-  - automated tests (php artisan test)
-  - build checks (npm run build)
-  - git diff inspection
-  - small, focused commits during development
+- ChatGPT, using GPT-5.5 Thinking, was used for planning, architecture guidance, scope control, README and runbook drafting, prompt design, and debugging strategy.
+- GitHub Copilot Agent inside VS Code was used for implementation assistance on focused feature slices.
+- AI-generated changes were manually reviewed and validated with:
+  - git diff
+  - php artisan test
+  - npm run build
+  - manual browser testing
+  - database and migration checks
+  - small focused commits
+- Final validation, debugging decisions, git process, and delivery decisions were manually reviewed.
+
+## Final Validation Checklist
+
+Run:
+
+```bash
+php artisan migrate:fresh --seed
+php artisan test
+npm run build
+php artisan serve
+```
+
+Manually verify:
+
+- Registration and login
+- Demo login with demo@example.com
+- Create and delete tweets
+- Optional image upload on tweet create
+- Reply creation and thread viewing
+- Personalized timeline behavior and pagination
+- Search behavior
+- Follow and unfollow behavior
+- Like and unlike behavior
+- Public profiles
+- Followers and following pages
+- Mobile-usable layout
