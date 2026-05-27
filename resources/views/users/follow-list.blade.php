@@ -1,5 +1,7 @@
 @php
     $isAuthenticated = auth()->check();
+    $isFollowersList = $listType === 'followers';
+    $title = $isFollowersList ? __('Followers') : __('Following');
 @endphp
 
 <!DOCTYPE html>
@@ -25,7 +27,7 @@
                     <a href="{{ url('/') }}" class="text-sm font-semibold text-gray-900">{{ config('app.name', 'Laravel') }}</a>
 
                     <nav class="flex items-center gap-4 text-sm text-gray-600">
-                        <a href="{{ route('users.search') }}" class="font-medium text-gray-900">{{ __('Search') }}</a>
+                        <a href="{{ route('users.search') }}" class="hover:text-gray-900">{{ __('Search') }}</a>
                         <a href="{{ route('login') }}" class="hover:text-gray-900">{{ __('Log in') }}</a>
                         @if (Route::has('register'))
                             <a href="{{ route('register') }}" class="hover:text-gray-900">{{ __('Register') }}</a>
@@ -39,30 +41,25 @@
             <div class="mx-auto max-w-4xl space-y-6 px-4 sm:px-6 lg:px-8">
                 <div class="overflow-hidden rounded-lg bg-white shadow-sm">
                     <div class="p-6">
-                        <h1 class="text-2xl font-semibold text-gray-900">{{ __('Search users') }}</h1>
-                        <p class="mt-2 text-sm text-gray-600">{{ __('Find users by username prefix.') }}</p>
+                        <h1 class="text-2xl font-semibold text-gray-900">{{ $listUser->username }} {{ $title }}</h1>
 
-                        <form method="GET" action="{{ route('users.search') }}" class="mt-6 grid gap-4 sm:grid-cols-[minmax(0,1fr)_auto]">
-                            <div>
-                                <x-input-label for="q" :value="__('Username')" />
-                                <x-text-input id="q" name="q" type="text" class="mt-1 block w-full" :value="$search" autocomplete="off" />
-                            </div>
-
-                            <div class="flex items-end">
-                                <x-primary-button>{{ __('Search') }}</x-primary-button>
-                            </div>
-                        </form>
+                        <div class="mt-2 flex items-center gap-4 text-sm text-gray-600">
+                            <a href="{{ route('users.followers', $listUser) }}" class="hover:text-gray-900 {{ $isFollowersList ? 'font-semibold text-gray-900' : '' }}">
+                                {{ __('Followers') }}
+                            </a>
+                            <a href="{{ route('users.following', $listUser) }}" class="hover:text-gray-900 {{ $isFollowersList ? '' : 'font-semibold text-gray-900' }}">
+                                {{ __('Following') }}
+                            </a>
+                        </div>
                     </div>
                 </div>
 
                 <div class="overflow-hidden rounded-lg bg-white shadow-sm">
                     <div class="p-6">
-                        <h2 class="text-lg font-semibold text-gray-900">{{ __('Results') }}</h2>
-
                         @if ($users->isEmpty())
-                            <p class="mt-4 text-sm text-gray-600">{{ __('No users matched that username prefix.') }}</p>
+                            <p class="text-sm text-gray-600">{{ __('No users found in this list yet.') }}</p>
                         @else
-                            <div class="mt-4 space-y-3">
+                            <div class="space-y-3">
                                 @foreach ($users as $user)
                                     <div class="flex items-center justify-between gap-4 rounded-lg border border-gray-200 p-4">
                                         <div class="space-y-1">

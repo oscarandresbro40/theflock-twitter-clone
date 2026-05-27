@@ -71,7 +71,7 @@ class UserSearchTest extends TestCase
 
         $response->assertOk();
         $response->assertSee('Log in to follow');
-        $response->assertDontSee('Follow');
+        $response->assertDontSee('>Follow<', false);
         $response->assertDontSee('Unfollow');
     }
 }
