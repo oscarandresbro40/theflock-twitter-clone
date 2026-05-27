@@ -107,7 +107,7 @@
                                 @foreach ($users as $user)
                                     <div class="flex items-center justify-between gap-4 rounded-lg border border-gray-200 p-4">
                                         <div>
-                                            <p class="text-sm font-medium text-gray-900">{{ $user->username }}</p>
+                                            <a href="{{ route('users.show', $user) }}" class="text-sm font-medium text-gray-900 hover:underline">{{ $user->username }}</a>
                                             <div class="mt-1 flex items-center gap-3 text-xs text-gray-500">
                                                 <a href="{{ route('users.followers', $user) }}" class="hover:text-gray-900">{{ __('Followers') }}</a>
                                                 <a href="{{ route('users.following', $user) }}" class="hover:text-gray-900">{{ __('Following') }}</a>

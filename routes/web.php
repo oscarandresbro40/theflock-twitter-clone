@@ -3,6 +3,7 @@
 use App\Http\Controllers\FollowController;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\UserFollowListController;
+use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\UserSearchController;
 use App\Http\Controllers\TweetController;
 use App\Http\Controllers\ProfileController;
@@ -13,6 +14,7 @@ Route::get('/', function () {
 });
 
 Route::get('/search', [UserSearchController::class, 'index'])->name('users.search');
+Route::get('/users/{user}', [UserProfileController::class, 'show'])->name('users.show');
 Route::get('/users/{user}/followers', [UserFollowListController::class, 'followers'])->name('users.followers');
 Route::get('/users/{user}/following', [UserFollowListController::class, 'following'])->name('users.following');
 
