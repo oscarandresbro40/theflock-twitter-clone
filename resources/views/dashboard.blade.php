@@ -62,6 +62,7 @@
                                                     <a href="{{ route('users.show', $tweet->user) }}" class="text-sm font-semibold text-gray-900 hover:underline">{{ '@'.$tweet->user->username }}</a>
                                                     <p class="whitespace-pre-wrap text-sm text-gray-900">{{ $tweet->body }}</p>
                                                     <p class="mt-2 text-xs text-gray-500">{{ $tweet->created_at->format('M j, Y g:i A') }}</p>
+                                                    <a href="{{ route('tweets.show', $tweet) }}" class="mt-2 inline-block text-xs font-medium text-gray-700 hover:text-gray-900">{{ __('View thread') }}</a>
                                                     <div class="mt-3 flex items-center gap-3">
                                                         @if ($tweet->liked_by_user)
                                                             <form method="POST" action="{{ route('likes.destroy', $tweet) }}">

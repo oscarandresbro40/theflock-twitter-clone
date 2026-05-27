@@ -12,6 +12,7 @@ class UserProfileController extends Controller
         return view('users.show', [
             'profileUser' => $user,
             'tweets' => $user->tweets()
+                ->roots()
                 ->orderByDesc('created_at')
                 ->orderByDesc('id')
                 ->paginate(10),

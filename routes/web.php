@@ -17,6 +17,7 @@ Route::get('/search', [UserSearchController::class, 'index'])->name('users.searc
 Route::get('/users/{user}', [UserProfileController::class, 'show'])->name('users.show');
 Route::get('/users/{user}/followers', [UserFollowListController::class, 'followers'])->name('users.followers');
 Route::get('/users/{user}/following', [UserFollowListController::class, 'following'])->name('users.following');
+Route::get('/tweets/{tweet}', [TweetController::class, 'show'])->name('tweets.show');
 
 Route::get('/dashboard', [TweetController::class, 'index'])
     ->middleware(['auth', 'verified'])
@@ -28,6 +29,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/tweets/{tweet}/like', [LikeController::class, 'store'])->name('likes.store');
     Route::delete('/tweets/{tweet}/like', [LikeController::class, 'destroy'])->name('likes.destroy');
     Route::post('/tweets', [TweetController::class, 'store'])->name('tweets.store');
+    Route::post('/tweets/{tweet}/replies', [TweetController::class, 'storeReply'])->name('tweets.replies.store');
     Route::delete('/tweets/{tweet}', [TweetController::class, 'destroy'])->name('tweets.destroy');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
