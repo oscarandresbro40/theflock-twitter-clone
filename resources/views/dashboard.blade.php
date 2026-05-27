@@ -23,7 +23,7 @@
                 <div class="space-y-6">
                     <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                         <div class="p-6 text-gray-900">
-                            <form method="POST" action="{{ route('tweets.store') }}" class="space-y-4">
+                            <form method="POST" action="{{ route('tweets.store') }}" class="space-y-4" enctype="multipart/form-data">
                                 @csrf
 
                                 <div>
@@ -38,6 +38,19 @@
                                     >{{ old('body') }}</textarea>
                                     <x-input-error class="mt-2" :messages="$errors->get('body')" />
                                     <p class="mt-2 text-sm text-gray-500">{{ __('Tweets can be up to 280 characters.') }}</p>
+                                </div>
+
+                                <div>
+                                    <x-input-label for="image" :value="__('Image (optional)')" />
+                                    <input
+                                        id="image"
+                                        name="image"
+                                        type="file"
+                                        accept="image/jpeg,image/png,image/webp"
+                                        class="mt-1 block w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                                    >
+                                    <x-input-error class="mt-2" :messages="$errors->get('image')" />
+                                    <p class="mt-2 text-sm text-gray-500">{{ __('JPG, PNG, or WEBP up to 2MB.') }}</p>
                                 </div>
 
                                 <div class="flex justify-end">
@@ -61,6 +74,9 @@
                                                 <div>
                                                     <a href="{{ route('users.show', $tweet->user) }}" class="text-sm font-semibold text-gray-900 hover:underline">{{ '@'.$tweet->user->username }}</a>
                                                     <p class="whitespace-pre-wrap text-sm text-gray-900">{{ $tweet->body }}</p>
+                                                    @if ($tweet->image_path)
+                                                        <img src="{{ asset('storage/'.$tweet->image_path) }}" alt="{{ __('Tweet image') }}" class="mt-3 max-h-80 w-full rounded-lg border border-gray-200 object-cover">
+                                                    @endif
                                                     <p class="mt-2 text-xs text-gray-500">{{ $tweet->created_at->format('M j, Y g:i A') }}</p>
                                                     <a href="{{ route('tweets.show', $tweet) }}" class="mt-2 inline-block text-xs font-medium text-gray-700 hover:text-gray-900">{{ __('View thread') }}</a>
                                                     <div class="mt-3 flex items-center gap-3">

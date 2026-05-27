@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class TweetController extends Controller
@@ -81,9 +82,19 @@ class TweetController extends Controller
     {
         $validated = $request->validate([
             'body' => ['required', 'string', 'max:280'],
+            'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
         ]);
 
-        $request->user()->tweets()->create($validated);
+        $imagePath = null;
+
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('tweet-images', 'public');
+        }
+
+        $request->user()->tweets()->create([
+            'body' => $validated['body'],
+            'image_path' => $imagePath,
+        ]);
 
         return redirect()
             ->route('dashboard')
@@ -109,6 +120,10 @@ class TweetController extends Controller
     public function destroy(Request $request, Tweet $tweet): RedirectResponse
     {
         abort_unless($tweet->user()->is($request->user()), 403);
+
+        if (! is_null($tweet->image_path)) {
+            Storage::disk('public')->delete($tweet->image_path);
+        }
 
         $tweet->delete();
 

@@ -70,6 +70,9 @@
                                 @foreach ($tweets as $tweet)
                                     <article class="rounded-lg border border-gray-200 p-4">
                                         <p class="whitespace-pre-wrap text-sm text-gray-900">{{ $tweet->body }}</p>
+                                        @if ($tweet->image_path)
+                                            <img src="{{ asset('storage/'.$tweet->image_path) }}" alt="{{ __('Tweet image') }}" class="mt-3 max-h-80 w-full rounded-lg border border-gray-200 object-cover">
+                                        @endif
                                         <p class="mt-2 text-xs text-gray-500">{{ $tweet->created_at->format('M j, Y g:i A') }}</p>
                                         <p class="mt-2 text-sm text-gray-600">{{ trans_choice('{0} 0 replies|{1} 1 reply|[2,*] :count replies', $tweet->replies_count, ['count' => $tweet->replies_count]) }}</p>
                                         <a href="{{ route('tweets.show', $tweet) }}" class="mt-2 inline-block text-xs font-medium text-gray-700 hover:text-gray-900">{{ __('View thread') }}</a>

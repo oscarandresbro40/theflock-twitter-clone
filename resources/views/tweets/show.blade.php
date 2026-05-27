@@ -45,6 +45,9 @@
                         <div class="mt-4 rounded-lg border border-gray-200 p-4">
                             <a href="{{ route('users.show', $tweet->user) }}" class="text-sm font-semibold text-gray-900 hover:underline">{{ '@'.$tweet->user->username }}</a>
                             <p class="mt-2 whitespace-pre-wrap text-sm text-gray-900">{{ $tweet->body }}</p>
+                            @if ($tweet->image_path)
+                                <img src="{{ asset('storage/'.$tweet->image_path) }}" alt="{{ __('Tweet image') }}" class="mt-3 max-h-80 w-full rounded-lg border border-gray-200 object-cover">
+                            @endif
                             <p class="mt-2 text-xs text-gray-500">{{ $tweet->created_at->format('M j, Y g:i A') }}</p>
                         </div>
                     </div>
@@ -62,6 +65,9 @@
                                     <article class="rounded-lg border border-gray-200 p-4">
                                         <a href="{{ route('users.show', $reply->user) }}" class="text-sm font-semibold text-gray-900 hover:underline">{{ '@'.$reply->user->username }}</a>
                                         <p class="mt-2 whitespace-pre-wrap text-sm text-gray-900">{{ $reply->body }}</p>
+                                        @if ($reply->image_path)
+                                            <img src="{{ asset('storage/'.$reply->image_path) }}" alt="{{ __('Tweet image') }}" class="mt-3 max-h-80 w-full rounded-lg border border-gray-200 object-cover">
+                                        @endif
                                         <p class="mt-2 text-xs text-gray-500">{{ $reply->created_at->format('M j, Y g:i A') }}</p>
                                     </article>
                                 @endforeach

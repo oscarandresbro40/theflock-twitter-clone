@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Builder;
 
-#[Fillable(['body', 'user_id', 'parent_id'])]
+#[Fillable(['body', 'user_id', 'parent_id', 'image_path'])]
 class Tweet extends Model
 {
     use HasFactory;
