@@ -28,7 +28,7 @@ The app is designed so evaluators can clone, install, seed, and run it quickly w
 
 - PHP 8.3+
 - Composer 2.9+
-- Node 24 LTS (or compatible)
+- Node 20+ or compatible. Developed with Node 24.16.0.
 - PHP SQLite extensions enabled:
   - pdo_sqlite
   - sqlite3
@@ -56,6 +56,11 @@ cp .env.example .env
 In .env, ensure:
 
 - DB_CONNECTION=sqlite
+
+Laravel uses database/database.sqlite by default for sqlite.
+
+Optional explicit path (if needed):
+
 - DB_DATABASE=database/database.sqlite
 
 Create the SQLite file if needed:
