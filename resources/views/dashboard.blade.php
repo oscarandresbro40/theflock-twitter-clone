@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('My Tweets') }}
+            {{ __('Timeline') }}
         </h2>
     </x-slot>
 
@@ -49,16 +49,17 @@
 
                     <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                         <div class="p-6 text-gray-900">
-                            <h3 class="text-lg font-semibold text-gray-900">{{ __('Your latest tweets') }}</h3>
+                            <h3 class="text-lg font-semibold text-gray-900">{{ __('Latest tweets from people you follow') }}</h3>
 
                             @if ($tweets->isEmpty())
-                                <p class="mt-4 text-sm text-gray-600">{{ __('You have not posted any tweets yet.') }}</p>
+                                <p class="mt-4 text-sm text-gray-600">{{ __('No tweets to show yet. Follow people or post your first tweet to get started.') }}</p>
                             @else
                                 <div class="mt-4 space-y-4">
                                     @foreach ($tweets as $tweet)
                                         <article class="rounded-lg border border-gray-200 p-4">
                                             <div class="flex items-start justify-between gap-4">
                                                 <div>
+                                                    <a href="{{ route('users.show', $tweet->user) }}" class="text-sm font-semibold text-gray-900 hover:underline">{{ '@'.$tweet->user->username }}</a>
                                                     <p class="whitespace-pre-wrap text-sm text-gray-900">{{ $tweet->body }}</p>
                                                     <p class="mt-2 text-xs text-gray-500">{{ $tweet->created_at->format('M j, Y g:i A') }}</p>
                                                     <div class="mt-3 flex items-center gap-3">
@@ -81,15 +82,21 @@
                                                     </div>
                                                 </div>
 
-                                                <form method="POST" action="{{ route('tweets.destroy', $tweet) }}">
-                                                    @csrf
-                                                    @method('DELETE')
+                                                @if ($tweet->user->is(auth()->user()))
+                                                    <form method="POST" action="{{ route('tweets.destroy', $tweet) }}">
+                                                        @csrf
+                                                        @method('DELETE')
 
-                                                    <x-danger-button>{{ __('Delete') }}</x-danger-button>
-                                                </form>
+                                                        <x-danger-button>{{ __('Delete') }}</x-danger-button>
+                                                    </form>
+                                                @endif
                                             </div>
                                         </article>
                                     @endforeach
+                                </div>
+
+                                <div class="mt-6">
+                                    {{ $tweets->links() }}
                                 </div>
                             @endif
                         </div>
