@@ -26,6 +26,7 @@ class TweetController extends Controller
                         ->orWhereIn('user_id', $followedUserIds);
                 })
                 ->withCount('likes')
+                ->withCount('replies')
                 ->withExists([
                     'likes as liked_by_user' => fn ($query) => $query->where('user_id', $user->getKey()),
                 ])

@@ -13,6 +13,7 @@ class UserProfileController extends Controller
             'profileUser' => $user,
             'tweets' => $user->tweets()
                 ->roots()
+                ->withCount('replies')
                 ->orderByDesc('created_at')
                 ->orderByDesc('id')
                 ->paginate(10),

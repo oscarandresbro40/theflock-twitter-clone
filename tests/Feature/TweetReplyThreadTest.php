@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use Database\Seeders\DemoSocialDataSeeder;
 use App\Models\Tweet;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -10,6 +11,76 @@ use Tests\TestCase;
 class TweetReplyThreadTest extends TestCase
 {
     use RefreshDatabase;
+
+    public function test_seeded_data_includes_replies(): void
+    {
+        $this->seed(DemoSocialDataSeeder::class);
+
+        $this->assertGreaterThan(0, Tweet::query()->whereNotNull('parent_id')->count());
+    }
+
+    public function test_tweet_cards_show_reply_count(): void
+    {
+        $user = User::factory()->create();
+
+        $rootTweet = Tweet::factory()->for($user)->create([
+            'body' => 'reply-count-card-body',
+        ]);
+
+        Tweet::factory()->create([
+            'parent_id' => $rootTweet->id,
+            'body' => 'reply-count-card-child-1',
+        ]);
+
+        Tweet::factory()->create([
+            'parent_id' => $rootTweet->id,
+            'body' => 'reply-count-card-child-2',
+        ]);
+
+        $dashboardResponse = $this
+            ->actingAs($user)
+            ->get(route('dashboard'));
+
+        $dashboardResponse->assertOk();
+        $dashboardResponse->assertSee('2 replies');
+
+        $profileResponse = $this->get(route('users.show', $user));
+
+        $profileResponse->assertOk();
+        $profileResponse->assertSee('2 replies');
+    }
+
+    public function test_reply_count_reflects_direct_replies_only(): void
+    {
+        $user = User::factory()->create();
+
+        $rootTweet = Tweet::factory()->for($user)->create([
+            'body' => 'direct-count-root-body',
+        ]);
+
+        $directReplyOne = Tweet::factory()->create([
+            'parent_id' => $rootTweet->id,
+        ]);
+
+        Tweet::factory()->create([
+            'parent_id' => $rootTweet->id,
+        ]);
+
+        Tweet::factory()->create([
+            'parent_id' => $directReplyOne->id,
+        ]);
+
+        $response = $this
+            ->actingAs($user)
+            ->get(route('dashboard'));
+
+        $response->assertOk();
+        $response->assertViewHas('tweets', function ($tweets) use ($rootTweet): bool {
+            $timelineTweet = $tweets->getCollection()->firstWhere('id', $rootTweet->id);
+
+            return $timelineTweet !== null && $timelineTweet->replies_count === 2;
+        });
+    }
 
     public function test_guests_can_view_a_tweet_thread(): void
     {

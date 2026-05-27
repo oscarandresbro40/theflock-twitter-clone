@@ -53,8 +53,58 @@ class DemoSocialDataSeeder extends Seeder
                 ->create();
         });
 
+        $this->seedReplies($allUsers);
         $this->seedFollows($allUsers, $demoUser);
         $this->seedLikes($allUsers);
+    }
+
+    private function seedReplies(Collection $users): void
+    {
+        $replyBodies = [
+            'Nice point, thanks for sharing.',
+            'I agree with this.',
+            'Great update.',
+            'This was helpful.',
+            'Well said.',
+            'Thanks for posting this.',
+            'Interesting take.',
+            'I had the same thought.',
+            'Good insight here.',
+            'Appreciate the context.',
+        ];
+
+        $rootTweets = Tweet::query()
+            ->whereNull('parent_id')
+            ->inRandomOrder()
+            ->limit(8)
+            ->get();
+
+        foreach ($rootTweets as $rootTweet) {
+            if (random_int(0, 100) < 35) {
+                continue;
+            }
+
+            $availableRepliers = $users
+                ->where('id', '!=', $rootTweet->user_id)
+                ->values();
+
+            if ($availableRepliers->isEmpty()) {
+                continue;
+            }
+
+            $replyCount = min($availableRepliers->count(), random_int(1, 3));
+
+            /** @var \Illuminate\Support\Collection<int, \App\Models\User> $selectedRepliers */
+            $selectedRepliers = $availableRepliers->random($replyCount);
+
+            foreach ($selectedRepliers as $replier) {
+                Tweet::query()->create([
+                    'user_id' => $replier->id,
+                    'parent_id' => $rootTweet->id,
+                    'body' => fake()->randomElement($replyBodies),
+                ]);
+            }
+        }
     }
 
     private function seedFollows(Collection $users, User $demoUser): void

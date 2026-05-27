@@ -80,6 +80,7 @@
                                                         @endif
 
                                                         <p class="text-sm text-gray-600">{{ trans_choice('{0} 0 likes|{1} 1 like|[2,*] :count likes', $tweet->likes_count, ['count' => $tweet->likes_count]) }}</p>
+                                                        <p class="text-sm text-gray-600">{{ trans_choice('{0} 0 replies|{1} 1 reply|[2,*] :count replies', $tweet->replies_count, ['count' => $tweet->replies_count]) }}</p>
                                                     </div>
                                                 </div>
 
