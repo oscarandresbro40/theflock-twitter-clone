@@ -43,6 +43,8 @@ The evaluators will review:
 
 - Register, login, logout.
 - Basic user profile with username, bio, and avatar displayed as a static default image, such as a grey silhouette SVG. No file upload is required.
+  - Bio must be a user-editable text field stored in the users table (max 160 characters).
+  - Provide a profile edit form for username and bio only.
 - Create tweets with max 280 characters.
 - Delete own tweets.
 - Timeline showing tweets from followed users as well as the authenticated user's own tweets, ordered by most recent first.
@@ -51,7 +53,7 @@ The evaluators will review:
 - Like and unlike tweets.
 - Visible like count.
 - Followers and following lists.
-- Basic user search by username prefix using a LIKE query on the username column, displaying matching users with their username and follow/unfollow button, paginated.
+- Basic user search by username prefix using a LIKE query on the username column, displaying matching users with their username and follow/unfollow button, paginated. For guest users viewing search results, replace the follow/unfollow button with a login link.
 - Responsive mobile-first UI.
 
 ## Ordering rules
@@ -64,9 +66,11 @@ The evaluators will review:
 
 - Follow and Like actions must be idempotent.
 - Use `firstOrCreate` or check existence before inserting to avoid duplicate constraint errors.
-- Prevent a user from following themselves. Return a 403 or redirect safely if attempted.
+- Prevent a user from following themselves. Return a 422 JSON response or redirect back with a validation error message if the request is non-AJAX.
 - A user may only delete their own tweets.
-- Guest users may view public pages when appropriate, but authenticated actions must require login.
+- Public pages (accessible to guests): user profile, tweet detail, search results, followers/following lists.
+- Authenticated-only pages: timeline, create/delete tweet, follow/unfollow, like/unlike.
+- Authenticated actions must require login.
 
 ## Expected models
 
@@ -120,3 +124,4 @@ Use these before committing when relevant:
 ```bash
 php artisan test
 npm run build
+```
