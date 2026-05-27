@@ -305,3 +305,16 @@ Manually verify:
 - Public profiles
 - Followers and following pages
 - Mobile-usable layout
+
+## Live Demo
+
+A hosted demo is available at:
+
+https://theflockchallenge.citricstudio.com
+
+Demo credentials:
+
+- Email: demo@example.com
+- Password: password
+
+The repository remains fully runnable locally through the setup runbook below.
