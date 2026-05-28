@@ -14,6 +14,8 @@ class RegistrationTest extends TestCase
         $response = $this->get('/register');
 
         $response->assertStatus(200);
+        $response->assertSee('Already have an account? Log in');
+        $response->assertSee(route('login'));
     }
 
     public function test_new_users_can_register(): void
