@@ -306,6 +306,19 @@ Manually verify:
 - Followers and following pages
 - Mobile-usable layout
 
+## Test Coverage
+
+The backend test suite was run locally with Xdebug coverage enabled.
+
+Current coverage:
+
+- Total: 87.9%
+
+To run the coverage report locally:
+
+```bash
+php artisan test --coverage
+
 ## Live Demo
 
 A hosted demo is available at:
