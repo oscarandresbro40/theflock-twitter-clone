@@ -318,6 +318,7 @@ To run the coverage report locally:
 
 ```bash
 php artisan test --coverage
+```
 
 ## Live Demo
 
